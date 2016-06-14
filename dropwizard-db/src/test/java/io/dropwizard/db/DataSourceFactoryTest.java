@@ -6,7 +6,6 @@ import io.dropwizard.configuration.YamlConfigurationFactory;
 import io.dropwizard.jackson.Jackson;
 import io.dropwizard.util.Duration;
 import io.dropwizard.validation.BaseValidator;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,6 +43,14 @@ public class DataSourceFactoryTest {
         dataSource = factory.build(metricRegistry, "test");
         dataSource.start();
         return dataSource;
+    }
+
+    @Test
+    public void testInitialSizeIsZero() throws Exception {
+        factory.setUrl("nonsense invalid url");
+        factory.setInitialSize(0);
+        ManagedDataSource dataSource = factory.build(metricRegistry, "test");
+        dataSource.start();
     }
 
     @Test

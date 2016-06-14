@@ -442,7 +442,7 @@ This connector extends the attributes that are available to the :ref:`HTTPS conn
         - type: h2
           port: 8445
           maxConcurrentStreams: 1024
-          initialStreamSendWindow: 65535
+          initialStreamRecvWindow: 65535
           keyStorePath: /path/to/file # required
           keyStorePassword: changeit
           trustStorePath: /path/to/file # required
@@ -454,7 +454,7 @@ Name                      Default   Description
 ========================  ========  ===================================================================================
 maxConcurrentStreams      1024      The maximum number of concurrently open streams allowed on a single HTTP/2
                                     connection. Larger values increase parallelism, but cost a memory commitment.
-initialStreamSendWindow   65535     The initial flow control window size for a new stream. Larger values may allow
+initialStreamRecvWindow   65535     The initial flow control window size for a new stream. Larger values may allow
                                     greater throughput, but also risk head of line blocking if TCP/IP flow control is
                                     triggered.
 ========================  ========  ===================================================================================
@@ -480,7 +480,7 @@ This connector extends the attributes that are available to the :ref:`HTTP conne
         - type: h2c
           port: 8446
           maxConcurrentStreams: 1024
-          initialStreamSendWindow: 65535
+          initialStreamRecvWindow: 65535
 
 
 ========================  ========  ===================================================================================
@@ -488,7 +488,7 @@ Name                      Default   Description
 ========================  ========  ===================================================================================
 maxConcurrentStreams      1024      The maximum number of concurrently open streams allowed on a single HTTP/2
                                     connection. Larger values increase parallelism, but cost a memory commitment.
-initialStreamSendWindow   65535     The initial flow control window size for a new stream. Larger values may allow
+initialStreamRecvWindow   65535     The initial flow control window size for a new stream. Larger values may allow
                                     greater throughput, but also risk head of line blocking if TCP/IP flow control is
                                     triggered.
 ========================  ========  ===================================================================================
@@ -599,7 +599,8 @@ archivedLogFilenamePattern   (none)       Required if ``archive`` is ``true``.
                                           Otherwise rollover is date-based, and the pattern must contain ``%d``, which is replaced with the
                                           date in ``yyyy-MM-dd`` form.
                                           If the pattern ends with ``.gz`` or ``.zip``, files will be compressed as they are archived.
-archivedFileCount            5            The number of archived files to keep. Must be between ``1`` and ``50``.
+archivedFileCount            5            The number of archived files to keep. Must be greater than or equal to ``0``. Zero is a
+                                          special value signifying to keep infinite logs (use with caution)
 maxFileSize                  (unlimited)  The maximum size of the currently active file before a rollover is triggered. The value can be
                                           expressed in bytes, kilobytes, megabytes, gigabytes, and terabytes by appending B, K, MB, GB, or
                                           TB to the numeric value.  Examples include 100MB, 1GB, 1TB.  Sizes can also be spelled out, such
@@ -1174,7 +1175,7 @@ minIdleTime                     1 minute                 The minimum amount of t
 validationQuery                 SELECT 1                 The SQL query that will be used to validate connections from
                                                          this pool before returning them to the caller or pool.
                                                          If specified, this query does not have to return any data, it
-                                                         just can't throw a SQLException.
+                                                         just can't throw a SQLException.( FireBird will throw exception unless validationQuery set to **select 1 from rdb$database**)
 
 validationQueryTimeout          none                     The timeout before a connection validation queries fail.
 

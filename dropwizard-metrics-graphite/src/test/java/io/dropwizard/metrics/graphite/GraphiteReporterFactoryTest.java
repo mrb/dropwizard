@@ -4,7 +4,6 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.graphite.Graphite;
 import com.codahale.metrics.graphite.GraphiteReporter;
 import com.codahale.metrics.graphite.GraphiteUDP;
-
 import io.dropwizard.configuration.YamlConfigurationFactory;
 import io.dropwizard.jackson.DiscoverableSubtypeResolver;
 import io.dropwizard.jackson.Jackson;
@@ -53,7 +52,7 @@ public class GraphiteReporterFactoryTest {
 
         final Graphite graphite = argument.getValue();
         assertThat(getField(graphite, "hostname")).isEqualTo("localhost");
-        assertThat(getField(graphite, "port")).isEqualTo(8080);
+        assertThat(getField(graphite, "port")).isEqualTo(2003);
         assertThat(getField(graphite, "address")).isNull();
     }
 
@@ -67,7 +66,7 @@ public class GraphiteReporterFactoryTest {
 
         final GraphiteUDP graphite = argument.getValue();
         assertThat(getField(graphite, "hostname")).isEqualTo("localhost");
-        assertThat(getField(graphite, "port")).isEqualTo(8080);
+        assertThat(getField(graphite, "port")).isEqualTo(2003);
         assertThat(getField(graphite, "address")).isNull();
     }
 

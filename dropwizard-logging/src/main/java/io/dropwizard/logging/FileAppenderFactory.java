@@ -5,12 +5,12 @@ import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.FileAppender;
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
 import ch.qos.logback.core.rolling.DefaultTimeBasedFileNamingAndTriggeringPolicy;
+import ch.qos.logback.core.rolling.FixedWindowRollingPolicy;
 import ch.qos.logback.core.rolling.RollingFileAppender;
 import ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP;
+import ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy;
 import ch.qos.logback.core.rolling.TimeBasedFileNamingAndTriggeringPolicy;
 import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
-import ch.qos.logback.core.rolling.FixedWindowRollingPolicy;
-import ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy;
 import ch.qos.logback.core.spi.DeferredProcessingAware;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,7 +22,6 @@ import io.dropwizard.util.Size;
 import io.dropwizard.validation.ValidationMethod;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 
 /**
  * An {@link AppenderFactory} implementation which provides an appender that writes events to a file, archiving older
@@ -71,7 +70,8 @@ import javax.validation.constraints.NotNull;
  *         <td>{@code archivedFileCount}</td>
  *         <td>{@code 5}</td>
  *         <td>
- *             The number of archived files to keep. Must be greater than {@code 0}.
+ *             The number of archived files to keep. Must be greater than or equal to {@code 0}. Zero is a
+ *             special value signifying to keep infinite logs (use with caution)
  *         </td>
  *     </tr>
  *     <tr>
@@ -104,14 +104,14 @@ import javax.validation.constraints.NotNull;
  */
 @JsonTypeName("file")
 public class FileAppenderFactory<E extends DeferredProcessingAware> extends AbstractAppenderFactory<E> {
-    @NotNull
+
     private String currentLogFilename;
 
     private boolean archive = true;
 
     private String archivedLogFilenamePattern;
 
-    @Min(1)
+    @Min(0)
     private int archivedFileCount = 5;
 
     private Size maxFileSize;
@@ -184,6 +184,12 @@ public class FileAppenderFactory<E extends DeferredProcessingAware> extends Abst
     public boolean isMaxFileSizeSettingSpecified() {
         return !archive || !(archivedLogFilenamePattern != null && archivedLogFilenamePattern.contains("%i")) ||
                 maxFileSize != null;
+    }
+
+    @JsonIgnore
+    @ValidationMethod(message = "currentLogFilename can only be null when archiving is enabled")
+    public boolean isValidFileConfiguration() {
+        return archive || currentLogFilename != null;
     }
 
     @Override

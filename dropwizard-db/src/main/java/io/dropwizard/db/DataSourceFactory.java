@@ -16,8 +16,8 @@ import java.sql.Connection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Properties;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -143,7 +143,9 @@ import java.util.concurrent.TimeUnit;
  *         <td>{@code initialSize}</td>
  *         <td>10</td>
  *         <td>
- *             The initial size of the connection pool.
+ *             The initial size of the connection pool. May be zero, which will allow you to start
+ *             the connection pool without requiring the DB to be up. In the latter case the {@link #minSize}
+ *             must also be set to zero.
  *         </td>
  *     </tr>
  *     <tr>
@@ -340,10 +342,10 @@ public class DataSourceFactory implements PooledDataSourceFactory {
 
     private boolean useFairQueue = true;
 
-    @Min(1)
+    @Min(0)
     private int initialSize = 10;
 
-    @Min(1)
+    @Min(0)
     private int minSize = 10;
 
     @Min(1)
