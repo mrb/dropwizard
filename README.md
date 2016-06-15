@@ -8,6 +8,7 @@ Dropwizard
 
 *Dropwizard is a sneaky way of making fast Java web applications.*
 
+
 It's a little bit of opinionated glue code which bangs together a set of libraries which have
 historically not sucked:
 
