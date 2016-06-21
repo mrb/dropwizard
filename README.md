@@ -5,9 +5,7 @@ Dropwizard
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.dropwizard/dropwizard-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.dropwizard/dropwizard-core/)
 [![Javadoc](https://javadoc-emblem.rhcloud.com/doc/io.dropwizard/dropwizard-core/badge.svg)](http://www.javadoc.io/doc/io.dropwizard/dropwizard-core)
 
-
 *Dropwizard is a sneaky way of making fast Java web applications.*
-
 
 It's a little bit of opinionated glue code which bangs together a set of libraries which have
 historically not sucked:
